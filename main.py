@@ -16,7 +16,7 @@ def init_db():
     with app.app_context():
         db = get_db()
         db.execute('''
-            CREATE TABLE IF NOT EXISTS Books (
+            CREATE TABLE IF NOT EXISTS books (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 genre TEXT NOT NULL
@@ -32,7 +32,7 @@ def index():
         if request.form.get('action') == 'delete':
             book_id = request.form.get('book_id')
             db = get_db()
-            db.execute('DELETE FROM Books WHERE id = ?', (book_id,))
+            db.execute('DELETE FROM books WHERE id = ?', (book_id,))
             db.commit()
             message = 'Book deleted successfully.'
         else:
@@ -61,9 +61,9 @@ def index():
             <h2>Add Contacts</h2>
             <form method="POST" action="/">
                 <label for="">title:</label><br>
-                <input type="text" id="title" name="title" required><br>
+                <input type="text" id="title" title="title" required><br>
                 <label for="genre">genre:</label><br>
-                <input type="text" id="genre" name="genre" required><br><br>
+                <input type="text" id="genre" genre="genre" required><br><br>
                 <input type="submit" value="Submit">
             </form>
             <p>{{ message }}</p>
