@@ -7,15 +7,15 @@ def connect_db():
     """Connect to the SQLite database."""
     return sqlite3.connect(DATABASE)
 
-def generate_test_data(num_contacts):
+def generate_test_data(num_books):
     """Generate test data for the contacts table."""
     db = connect_db()
-    for i in range(num_contacts):
+    for i in range(num_books):
         name = f'Test Name {i}'
         phone = f'123-456-789{i}'
-        db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+        db.execute('INSERT INTO contacts (title, genre) VALUES (?, ?)', (title, genre))
     db.commit()
-    print(f'{num_contacts} test contacts added to the database.')
+    print(f'{num_books} test contacts added to the database.')
     db.close()
 
 if __name__ == '__main__':
