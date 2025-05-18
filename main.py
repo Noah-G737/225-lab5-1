@@ -16,10 +16,10 @@ def init_db():
     with app.app_context():
         db = get_db()
         db.execute('''
-            CREATE TABLE IF NOT EXISTS contacts (
+            CREATE TABLE IF NOT EXISTS Books (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                phone TEXT NOT NULL
+                title TEXT NOT NULL,
+                genre TEXT NOT NULL
             );
         ''')
         db.commit()
@@ -30,25 +30,25 @@ def index():
     if request.method == 'POST':
         # Check if it's a delete action
         if request.form.get('action') == 'delete':
-            contact_id = request.form.get('contact_id')
+            book_id = request.form.get('book_id')
             db = get_db()
-            db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
+            db.execute('DELETE FROM Books WHERE id = ?', (book_id,))
             db.commit()
-            message = 'Contact deleted successfully.'
+            message = 'Book deleted successfully.'
         else:
-            name = request.form.get('name')
-            phone = request.form.get('phone')
-            if name and phone:
+            title = request.form.get('title')
+            genre = request.form.get('genre')
+            if title and genre:
                 db = get_db()
-                db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+                db.execute('INSERT INTO  (title, genre) VALUES (?, ?)', (title, genre))
                 db.commit()
-                message = 'Contact added successfully.'
+                message = 'Book added successfully.'
             else:
-                message = 'Missing name or phone number.'
+                message = 'Missing title or genre.'
 
     # Always display the contacts table
     db = get_db()
-    contacts = db.execute('SELECT * FROM contacts').fetchall()
+    contacts = db.execute('SELECT * FROM Books').fetchall()
 
     # Display the HTML form along with the contacts table
     return render_template_string('''
@@ -60,27 +60,27 @@ def index():
         <body>
             <h2>Add Contacts</h2>
             <form method="POST" action="/">
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" required><br>
-                <label for="phone">Phone Number:</label><br>
-                <input type="text" id="phone" name="phone" required><br><br>
+                <label for="">title:</label><br>
+                <input type="text" id="title" name="title" required><br>
+                <label for="genre">genre:</label><br>
+                <input type="text" id="genre" name="genre" required><br><br>
                 <input type="submit" value="Submit">
             </form>
             <p>{{ message }}</p>
             {% if contacts %}
                 <table border="1">
                     <tr>
-                        <th>Name</th>
-                        <th>Phone Number</th>
+                        <th>Title</th>
+                        <th>Genre</th>
                         <th>Delete</th>
                     </tr>
-                    {% for contact in contacts %}
+                    {% for book in books %}
                         <tr>
-                            <td>{{ contact['name'] }}</td>
-                            <td>{{ contact['phone'] }}</td>
+                            <td>{{ book['title'] }}</td>
+                            <td>{{ book['title'] }}</td>
                             <td>
                                 <form method="POST" action="/">
-                                    <input type="hidden" name="contact_id" value="{{ contact['id'] }}">
+                                    <input type="hidden" name="book_id" value="{{ book['id'] }}">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="submit" value="Delete">
                                 </form>
